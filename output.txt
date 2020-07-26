@@ -1,0 +1,41 @@
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /infopages
+       Parameters = {}
+          Headers = [Authorization:"Basic dXNlcjp1c2VyMTIz", Content-Type:"application/json;charset=UTF-8", Content-Length:"77"]
+             Body = {
+  "operation" : "create",
+  "title" : "TEST_TITLE",
+  "parentId" : -1
+}
+    Session Attrs = {SPRING_SECURITY_CONTEXT=org.springframework.security.core.context.SecurityContextImpl@6004ec5d: Authentication: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@6004ec5d: Principal: ru.alwertus.digimemb.auth.User@24197b13; Credentials: [PROTECTED]; Authenticated: true; Details: org.springframework.security.web.authentication.WebAuthenticationDetails@957e: RemoteIpAddress: 127.0.0.1; SessionId: null; Granted Authorities: ru.alwertus.digimemb.auth.Role@bbe2fdf4}
+
+Handler:
+             Type = ru.alwertus.digimemb.info.pagelist.InfoPagesItemController
+           Method = ru.alwertus.digimemb.info.pagelist.InfoPagesItemController#request(String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:"text/plain;charset=UTF-8", Content-Length:"23", X-Content-Type-Options:"nosniff", X-XSS-Protection:"1; mode=block", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = text/plain;charset=UTF-8
+             Body = {"ID":62,"Result":"OK"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
