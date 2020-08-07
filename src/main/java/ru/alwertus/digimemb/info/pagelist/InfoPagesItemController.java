@@ -3,6 +3,7 @@ package ru.alwertus.digimemb.info.pagelist;
 
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +43,7 @@ public class InfoPagesItemController {
                         try {
                             parentId = rq.getLong("parentId");
                         } catch(Exception ignored) {}
-                        rs.put("ID", pages.create(title, parentId, AccessLevel.ALL, user));
+                        rs.put("ID", pages.create(title, parentId, AccessLevel.PRIVATE, user));
                         rs.put("Result", "OK");
                         break;
 
@@ -54,11 +55,10 @@ public class InfoPagesItemController {
 
                     case "update":
                         Long id = rq.getLong("id");
-                        String field = rq.getString("field");
-                        log.info("Change [" + field + "] id=" + id);
+                        log.info("Change record id=" + id);
                         boolean recordChanged = false;
 
-                        if (rq.has("title") && field.equals("title")) {
+                        if (rq.has("title")) {
                             String newTitle = rq.getString("title");
                             log.info("Update Title to '" + newTitle + "'");
                             if (!pages.updateTitle(id, newTitle)) {
@@ -71,10 +71,12 @@ public class InfoPagesItemController {
                             recordChanged = true;
                         }
 
-                        if (rq.has("parentId") && field.equals("parent")) {
-                            Long newParent = -1L;
+                        if (rq.has("parentId")) {
+                            long newParent = -1L;
                             if (!rq.isNull("parentId"))
-                                newParent = rq.getLong("parentId");
+                                try {
+                                    newParent = rq.getLong("parentId");
+                                } catch(JSONException ignored) { }
                             log.info("Update ParentId to '" + newParent + "'");
                             if (!pages.updateParentId(id, newParent)) {
                                 log.error("Error");
