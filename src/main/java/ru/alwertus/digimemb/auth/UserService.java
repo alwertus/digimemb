@@ -2,8 +2,6 @@ package ru.alwertus.digimemb.auth;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +23,6 @@ public class UserService implements UserDetailsService {
     private final RoleRepo roleRepo;
     private final Set<Role> defaultRole;
 
-    // constructor
     @Autowired
     public UserService(BCryptPasswordEncoder passwordEncoder, RoleRepo roleRepo, UserRepo userRepo) {
         this.passwordEncoder = passwordEncoder;
@@ -90,16 +87,5 @@ public class UserService implements UserDetailsService {
         }
         log.info("SPRING SECURITY. User found success");
         return oUser.get();
-    }
-
-    // Получить текущего пользователя
-    public static User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            log.error("Error. Authentication is null");
-            return null;
-        }
-        User user = (User) auth.getPrincipal();
-        return user;
     }
 }

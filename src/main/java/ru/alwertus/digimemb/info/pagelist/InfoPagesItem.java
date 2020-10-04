@@ -28,8 +28,9 @@ public class InfoPagesItem {
     @Getter @Setter
     private Long id;
 
-    @ManyToOne (optional = true)
+    @ManyToOne ()
     @JoinColumn
+    @Getter
     private User creator;
 
     @Enumerated(EnumType.STRING)
@@ -40,22 +41,20 @@ public class InfoPagesItem {
     private String title;
 
     @Getter @Setter
-    @ManyToOne (optional = true)
+    @ManyToOne ()
     @JoinColumn
     private InfoPagesItem parentItem;
 
+    @Setter
     @OneToMany(mappedBy = "parentItem")
     private List<InfoPagesItem> children;
 
-    // constructor 0
     public InfoPagesItem() { }
 
-    // constructor 1
     public InfoPagesItem(String title) {
         this.title = title;
     }
 
-    // constructor 2
     public InfoPagesItem(String title, InfoPagesItem parent, AccessLevel access, User creator) {
         this.title = title;
         if (parent != null)
@@ -79,5 +78,16 @@ public class InfoPagesItem {
                 json.put("children", jsonArr);
             }
         return json;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof InfoPagesItem)) return false;
+        return getJSONObject().similar(((InfoPagesItem) obj).getJSONObject());
+    }
+
+    @Override
+    public int hashCode() {
+        return getJSONObject().toString().hashCode();
     }
 }

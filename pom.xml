@@ -6,14 +6,14 @@
 
     <groupId>ru.alwertus</groupId>
     <artifactId>digimemb</artifactId>
-    <version>2.1</version>
+    <version>2.2</version>
     <name>digimem</name>
-    <description>Main Alwertus Website</description>
+    <description>Alwertus Website</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.M3</version>
+        <version>2.3.4.RELEASE</version>
     </parent>
 
     <pluginRepositories>
@@ -104,12 +104,33 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Spring Boot Testing -->
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>3.5.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.5.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.5.13</version>
+            <scope>test</scope>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>

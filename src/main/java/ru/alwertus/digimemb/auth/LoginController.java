@@ -32,10 +32,12 @@ public class LoginController {
 
         JSONObject jsonOut = new JSONObject();
 
+        if (!jsonIn.has("operation"))
+            return "Operation not specified";
         String operation = jsonIn.getString("operation");
         if (operation.equals("login")) {
-            String sLogin = "";
-            String sPassword = "";
+            String sLogin;
+            String sPassword;
 
             try {
                 sLogin = jsonIn.getString("name");
@@ -54,15 +56,7 @@ public class LoginController {
             log.info("TRY LOGIN: " + sLogin + " - " + sPassword);
 
             try {
-
-//                Authentication request = new UsernamePasswordAuthenticationToken(sLogin, sPassword);
-//                Authentication result = new UsernamePasswordAuthenticationToken(request.getName(), request.getCredentials(), new ArrayList<GrantedAuthority>());
                 User user = (User) userService.loadUserByUsername(sLogin);
-
-
-                /*SecurityContextHolder.getContext().setAuthentication(result);
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                User user = (User) auth.getPrincipal();*/
 
                 log.info("SUCCESS! " + user.getRolesAsString());
                 jsonOut.put("userName", sLogin);
@@ -83,7 +77,4 @@ public class LoginController {
 
         return jsonOut.toString();
     }
-    /* test
-    curl --header "Content-Type: application/json" --request POST --data {"operation":"login","name":"a111","password":"b222"} localhost:5188/login
-    */
 }

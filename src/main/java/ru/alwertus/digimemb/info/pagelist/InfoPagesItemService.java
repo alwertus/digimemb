@@ -1,11 +1,10 @@
 package ru.alwertus.digimemb.info.pagelist;
 
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.alwertus.digimemb.auth.IAuthenticationFacade;
 import ru.alwertus.digimemb.auth.User;
-import ru.alwertus.digimemb.auth.UserService;
 import ru.alwertus.digimemb.info.page.InfoPageService;
 
 import java.util.Optional;
@@ -18,9 +17,10 @@ public class InfoPagesItemService {
 
     private final InfoPagesItemRepo db;
 
-    // constructor
     @Autowired
-    public InfoPagesItemService(InfoPagesItemRepo db) {
+    private IAuthenticationFacade authenticationFacade;
+
+    public InfoPagesItemService(@Autowired InfoPagesItemRepo db) {
         this.db = db;
     }
 
@@ -34,7 +34,7 @@ public class InfoPagesItemService {
     }
 
     public Long create(String title, Long parentId, AccessLevel access) {
-        User user = UserService.getCurrentUser();
+        User user = authenticationFacade.getCurrentUser();
         return create(title, parentId, access, user);
     }
 

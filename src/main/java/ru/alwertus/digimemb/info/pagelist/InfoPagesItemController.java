@@ -10,15 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.alwertus.digimemb.auth.IAuthenticationFacade;
 import ru.alwertus.digimemb.auth.User;
-import ru.alwertus.digimemb.auth.UserService;
+import ru.alwertus.digimemb.rest.AddingError;
 
 @Log4j2
 @RestController
 @RequestMapping("infopages")
-public class InfoPagesItemController {
+public class InfoPagesItemController implements AddingError {
     @Autowired
     InfoPagesItemService pages;
+
+    @Autowired
+    IAuthenticationFacade authenticationFacade;
 
     @PostMapping
     public String request(@RequestBody String requestBody) {
@@ -29,11 +33,13 @@ public class InfoPagesItemController {
         JSONObject rq = new JSONObject(requestBody);
         JSONObject rs = new JSONObject();
 
+        if (!rq.has("operation")) {
+            log.error(addError(rs, "Operation is not defined"));
+        } else
         try {
-            user = UserService.getCurrentUser();
+            user = authenticationFacade.getCurrentUser();
             if (user == null) {
-                log.error("Current User not defined");
-                rs.put("Error", "Current User not defined");
+                log.error(addError(rs, "Current User not defined"));
             }
             else
                 switch (rq.getString("operation")) {
@@ -43,7 +49,8 @@ public class InfoPagesItemController {
                         try {
                             parentId = rq.getLong("parentId");
                         } catch(Exception ignored) {}
-                        rs.put("ID", pages.create(title, parentId, AccessLevel.PRIVATE, user));
+                        Long created = pages.create(title, parentId, AccessLevel.PRIVATE, user);
+                        rs.put("ID", created);
                         rs.put("Result", "OK");
                         break;
 
@@ -62,9 +69,7 @@ public class InfoPagesItemController {
                             String newTitle = rq.getString("title");
                             log.info("Update Title to '" + newTitle + "'");
                             if (!pages.updateTitle(id, newTitle)) {
-                                log.error("Error");
-                                rs.put("Result", "Error");
-                                rs.put("Error", "Update record id '" + id + "' title to '" + newTitle + "' error");
+                                log.error(addError(rs, "Update record id '" + id + "' title to '" + newTitle + "' error"));
                                 break;
                             }
                             log.info("Update Title: Success");
@@ -79,9 +84,7 @@ public class InfoPagesItemController {
                                 } catch(JSONException ignored) { }
                             log.info("Update ParentId to '" + newParent + "'");
                             if (!pages.updateParentId(id, newParent)) {
-                                log.error("Error");
-                                rs.put("Result", "Error");
-                                rs.put("Error", "Update record id '" + id + "' parent to '" + newParent + "' error");
+                                log.error(addError(rs, "Update record id '" + id + "' parent to '" + newParent + "' error"));
                                 break;
                             }
                             log.info("Update ParentId: Success");
@@ -95,18 +98,15 @@ public class InfoPagesItemController {
                             pages.delete(rq.getLong("id"));
                             rs.put("Result", "OK");
                         } catch(Exception e) {
-                            rs.put("Result", "Error");
-                            rs.put("Error", "Error get id or delete. " + e.getMessage());
+                            log.error(addError(rs, "Error get id or delete. " + e.getMessage()));
                         }
                         break;
 
                     default:
-                        rs.put("Result", "Error");
-                        rs.put("Error", "Unknown operation");
+                        log.error(addError(rs, "Unknown operation"));
                 }
         } catch (Exception e) {
-            rs.put("Result", "Error");
-            rs.put("Error", e.getMessage());
+            log.error(addError(rs, "Exception! " + e.getMessage()));
         }
 
         return rs.toString();

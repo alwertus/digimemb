@@ -11,7 +11,6 @@ import java.util.Optional;
 public class InfoPageService {
     private InfoPageRepo db;
 
-    // constructor
     @Autowired
     public InfoPageService(InfoPageRepo db) { this.db = db; }
 

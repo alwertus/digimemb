@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.alwertus.digimemb.rest.AddingError;
 
 @Log4j2
 @RestController
 @RequestMapping("infopage")
-public class InfoPageController {
+public class InfoPageController implements AddingError {
     @Autowired
     InfoPageService pageService;
 
@@ -23,11 +24,12 @@ public class InfoPageController {
         JSONObject rs = new JSONObject();
         try {
             Long id = rq.getLong("id");
-            InfoPage page = null;
+            InfoPage page;
 
             switch (rq.getString("operation")) {
                 case "get":
                     page = pageService.getPage(id);
+
                     rs.put("html", page == null ? "" : page.getHtml());
                     rs.put("Result", "OK");
                     break;
@@ -44,12 +46,10 @@ public class InfoPageController {
                     break;
 
                 default:
-                    rs.put("Result", "Error");
-                    rs.put("Error", "Unknown operation");
+                    log.error(addError(rs, "Unknown operation"));
             }
         } catch (Exception e) {
-            rs.put("Result", "Error");
-            rs.put("Error", e.getMessage());
+            log.error(addError(rs, e.getMessage()));
         }
 
         return rs.toString();
