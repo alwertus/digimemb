@@ -10,7 +10,6 @@ import javax.persistence.*;
 public class InfoPage {
     @Id
     @Getter @Setter
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Lob
